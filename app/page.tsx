@@ -27,7 +27,7 @@ export default function Home() {
         </FormField>
 
         <FormField htmlFor="count" label="How many games players can select?">
-          <input type="number" name="count" id="count" value={5} />
+          <input type="number" name="count" id="count" defaultValue={5} />
         </FormField>
 
         <FormField htmlFor="expansions" label="Include expansions?">

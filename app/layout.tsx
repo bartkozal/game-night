@@ -2,6 +2,7 @@ import cx from "classnames";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cx("p-6", inter.className)}>
-        <h1 className="text-2xl">Game Night</h1>
+      <body
+        className={cx("p-6", inter.className)}
+        suppressHydrationWarning={true}
+      >
+        <Link href="/">
+          <h1 className="text-2xl">Game Night</h1>
+        </Link>
+
         <h2 className="mb-4">{metadata.description}</h2>
 
         {children}
