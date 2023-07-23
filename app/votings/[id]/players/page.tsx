@@ -7,7 +7,8 @@ import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ArrowsUpDownIcon from "@heroicons/react/24/outline/ArrowsUpDownIcon";
+import Bars4Icon from "@heroicons/react/24/outline/Bars4Icon";
+import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import cx from "classnames";
 
 type Step = "select-games" | "order-games";
@@ -97,9 +98,20 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
           </Heading>
 
           <div className="grid gap-2 mb-4">
-            <BoardGame size="small" />
-            <BoardGame size="small" />
-            <BoardGame size="small" />
+            <div className="flex items-center justify-between">
+              <BoardGame size="small" />
+              <XMarkIcon className="w-5 h-5 text-gray-500" />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <BoardGame size="small" />
+              <XMarkIcon className="w-5 h-5 text-gray-500" />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <BoardGame size="small" />
+              <XMarkIcon className="w-5 h-5 text-gray-500" />
+            </div>
           </div>
 
           <Button className="w-full" onClick={() => setStep("order-games")}>
@@ -118,26 +130,26 @@ function OrderGamesStep({ setStep }: { setStep: (step: Step) => void }) {
         <Heading>Order games by priority:</Heading>
 
         <div className="flex gap-4 items-center mt-4">
+          <Bars4Icon className="w-6 h-6 text-gray-500" />
           <div className="text-gray-300 font-bold text-3xl">1</div>
-          <ArrowsUpDownIcon className="w-6 h-6 text-gray-500" />
           <BoardGame />
         </div>
 
         <div className="flex gap-4 items-center mt-4">
+          <Bars4Icon className="w-6 h-6 text-gray-500" />
           <div className="text-gray-300 font-bold text-3xl">2</div>
-          <ArrowsUpDownIcon className="w-6 h-6 text-gray-500" />
           <BoardGame />
         </div>
 
         <div className="flex gap-4 items-center mt-4">
+          <Bars4Icon className="w-6 h-6 text-gray-500" />
           <div className="text-gray-300 font-bold text-3xl">3</div>
-          <ArrowsUpDownIcon className="w-6 h-6 text-gray-500" />
           <BoardGame />
         </div>
       </div>
 
       <FormField htmlFor="name" label="Your name:">
-        <input type="text" name="name" id="name" className="w-full" required />
+        <input type="text" name="name" id="name" className="w-full" />
       </FormField>
 
       <div className="mt-4 flex gap-3 justify-center">
