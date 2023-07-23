@@ -3,6 +3,8 @@ import cx from "classnames";
 
 type Props = {
   size?: "small";
+  name: string;
+  thumbnail: string;
 };
 
 function getThumbnailSize(size: Props["size"]): number {
@@ -14,7 +16,11 @@ function getThumbnailSize(size: Props["size"]): number {
   }
 }
 
-export default function BoardGame({ size }: Props) {
+export default function BoardGame({
+  size,
+  name = "Catan: Gra planszowa",
+  thumbnail = "https://cf.geekdo-images.com/7bd4Zhbzdc_57GEpnd_zjA__thumb/img/yY27TheKJozDYkCXczDLgrCIo-M=/fit-in/200x150/filters:strip_icc()/pic2901599.jpg",
+}: Props) {
   return (
     <div
       className={cx("flex items-center", {
@@ -23,19 +29,18 @@ export default function BoardGame({ size }: Props) {
       })}
     >
       <Image
-        src="https://cf.geekdo-images.com/7bd4Zhbzdc_57GEpnd_zjA__thumb/img/yY27TheKJozDYkCXczDLgrCIo-M=/fit-in/200x150/filters:strip_icc()/pic2901599.jpg"
+        src={thumbnail}
         width={(getThumbnailSize(size) * 4) / 3}
         height={getThumbnailSize(size)}
-        alt="Catan: Gra planszowa"
+        alt={name}
       />
 
       <h4
         className={cx({
-          "text-lg": !size,
           "text-sm": size === "small",
         })}
       >
-        Catan: Gra planszowa
+        {name}
       </h4>
     </div>
   );

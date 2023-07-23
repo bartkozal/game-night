@@ -6,10 +6,12 @@ import Form from "@/app/ui/Form";
 import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Bars4Icon from "@heroicons/react/24/outline/Bars4Icon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import cx from "classnames";
+import bggCollection from "@/app/__tests__/bgg-collection.json";
+import parseBggCollectionPayload from "@/app/utils/parseBggCollectionPayload";
 
 type Step = "select-games" | "order-games";
 
@@ -33,61 +35,19 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
           />
 
           <div className="grid gap-4 grid-cols-3">
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": true,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": false,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": false,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": false,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": true,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": false,
-              })}
-            >
-              <BoardGame />
-            </div>
-
-            <div
-              className={cx("p-2 hover:bg-gray-200 cursor-pointer", {
-                "bg-gray-300": false,
-              })}
-            >
-              <BoardGame />
-            </div>
+            {bggCollection.map((entry) => (
+              <div
+                key={entry.id}
+                className={cx(
+                  "p-2 hover:bg-gray-200 cursor-pointer flex items-center",
+                  {
+                    "bg-gray-300": [true, false][Math.floor(Math.random() * 2)],
+                  }
+                )}
+              >
+                <BoardGame name={entry.name} thumbnail={entry.thumbnail} />
+              </div>
+            ))}
           </div>
         </div>
 
