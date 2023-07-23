@@ -13,6 +13,8 @@ import cx from "classnames";
 
 type Step = "select-games" | "order-games";
 
+// https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
+
 function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
   return (
     <>
