@@ -6,18 +6,23 @@ import Form from "@/app/ui/Form";
 import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Bars4Icon from "@heroicons/react/24/outline/Bars4Icon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import cx from "classnames";
 import bggCollection from "@/app/__tests__/bgg-collection.json";
-import parseBggCollectionPayload from "@/app/utils/parseBggCollectionPayload";
+import { useDebounce } from "react-use";
 
 type Step = "select-games" | "order-games";
 
 // https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
 
 function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
+  const [searchValue, setSearchValue] = useState("");
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
+
+  useDebounce(() => setDebouncedSearchValue(searchValue), 300, [searchValue]);
+
   return (
     <>
       <div className="flex divide-x">
@@ -32,22 +37,30 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
             name="search"
             id="search"
             placeholder="Search..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
 
           <div className="grid gap-4 grid-cols-3">
-            {bggCollection.map((entry) => (
-              <div
-                key={entry.id}
-                className={cx(
-                  "p-2 hover:bg-gray-200 cursor-pointer flex items-center",
-                  {
-                    "bg-gray-300": [true, false][Math.floor(Math.random() * 2)],
-                  }
-                )}
-              >
-                <BoardGame name={entry.name} thumbnail={entry.thumbnail} />
-              </div>
-            ))}
+            {bggCollection
+              .filter((entry) =>
+                entry.name
+                  .toLowerCase()
+                  .includes(debouncedSearchValue.toLowerCase())
+              )
+              .map((entry) => (
+                <div
+                  key={entry.id}
+                  className={cx(
+                    "p-2 hover:bg-gray-200 cursor-pointer flex items-center",
+                    {
+                      "bg-gray-300": false,
+                    }
+                  )}
+                >
+                  <BoardGame name={entry.name} thumbnail={entry.thumbnail} />
+                </div>
+              ))}
           </div>
         </div>
 
