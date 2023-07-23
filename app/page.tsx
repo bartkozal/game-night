@@ -3,15 +3,16 @@
 import { useRouter } from "next/navigation";
 import PlusSmallIcon from "@heroicons/react/24/outline/PlusSmallIcon";
 import FormField from "./ui/FormField";
+import Form from "./ui/Form";
+import Button from "./ui/Button";
 
 export default function Home() {
   const router = useRouter();
 
   return (
     <main>
-      <form
-        className="grid gap-4"
-        onClick={(e) => {
+      <Form
+        onSubmit={(e) => {
           e.preventDefault();
           router.push("/votings/1");
         }}
@@ -42,14 +43,9 @@ export default function Home() {
         </FormField>
 
         <div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-3 rounded-2xl"
-          >
-            Create voting list
-          </button>
+          <Button type="submit">Create voting list</Button>
         </div>
-      </form>
+      </Form>
     </main>
   );
 }
