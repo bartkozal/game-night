@@ -19,7 +19,7 @@ export default function Home() {
       >
         <FormField
           htmlFor="accounts"
-          label="Type BGG accounts used to create games list:"
+          label="Use the following BoardGameGeek accounts to create the voting list:"
         >
           <input type="text" name="accounts" id="accounts" />
           <a href="#" className="flex">
