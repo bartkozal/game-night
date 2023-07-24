@@ -35,7 +35,7 @@ function SelectGamesStep({
 }: SelectGamesStepProps) {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
-  const isDisabled = selectedGames.length !== selectedGamesLimit;
+  const isSelectionEnabled = selectedGames.length < selectedGamesLimit;
   const isSelected = (game: Game) =>
     selectedGames.some(({ id }) => id === game.id);
 
@@ -79,7 +79,9 @@ function SelectGamesStep({
                     setSelectedGames(
                       isSelected(game)
                         ? selectedGames.filter(({ id }) => id !== game.id)
-                        : [...selectedGames, game]
+                        : isSelectionEnabled
+                        ? [...selectedGames, game]
+                        : selectedGames
                     );
                   }}
                 >
@@ -105,8 +107,16 @@ function SelectGamesStep({
                   name={game.name}
                   thumbnail={game.thumbnail}
                 />
-                <div>
-                  <XMarkIcon className="w-5 h-5 text-gray-500" />
+
+                <div
+                  className="cursor-pointer text-gray-500"
+                  onClick={(e) => {
+                    setSelectedGames(
+                      selectedGames.filter(({ id }) => id !== game.id)
+                    );
+                  }}
+                >
+                  <XMarkIcon className="w-5 h-5" />
                 </div>
               </div>
             ))}
@@ -115,7 +125,7 @@ function SelectGamesStep({
           <Button
             className="w-full"
             onClick={() => setStep("order-games")}
-            disabled={isDisabled}
+            disabled={isSelectionEnabled}
           >
             Confirm
           </Button>

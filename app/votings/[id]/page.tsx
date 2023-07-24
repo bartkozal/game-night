@@ -38,7 +38,9 @@ export default function Page({ params }: Props) {
             ref={shareUrlInput}
           />
 
-          <ClipboardDocumentListIcon className="w-6 h-6 text-gray-600 ml-3" />
+          <button>
+            <ClipboardDocumentListIcon className="w-6 h-6 text-gray-600 ml-3" />
+          </button>
         </div>
       </div>
 
