@@ -42,10 +42,12 @@ export default function Page({ params }: Props) {
         </div>
       </div>
 
-      <Heading>Games selected for the game night on July 23rd at 19:00</Heading>
-
-      <div className="flex mt-4">
+      <div className="flex">
         <div className="w-2/3">
+          <Heading>
+            Games selected for the game night on July 23rd at 19:00
+          </Heading>
+
           <div className="flex gap-4 items-center">
             <div className="text-gray-300 font-bold text-3xl">1</div>
             <BoardGame />
@@ -55,6 +57,7 @@ export default function Page({ params }: Props) {
 
         <div className="w-1/3">
           <Heading>Voting</Heading>
+
           <h4 className="mb-2 border-b-2 inline-block">Bart</h4>
           <div className="flex gap-2 items-center">
             <div className="text-gray-300 font-bold text-base">1</div>

@@ -9,6 +9,7 @@ export default function Button({
   children,
   className,
   styleType,
+  disabled,
   ...props
 }: Props) {
   return (
@@ -16,11 +17,14 @@ export default function Button({
       className={cx(
         "py-2",
         {
-          "bg-green-600 text-white rounded-xl px-4": styleType !== "inline",
+          " text-white rounded-xl px-4": styleType !== "inline",
+          "bg-green-600": !disabled && styleType !== "inline",
+          "bg-gray-300": disabled && styleType !== "inline",
           "px-2": styleType === "inline",
         },
         className
       )}
+      disabled={disabled}
       {...props}
     >
       {children}

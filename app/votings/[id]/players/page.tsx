@@ -12,14 +12,32 @@ import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import cx from "classnames";
 import bggCollection from "@/app/__tests__/bgg-collection.json";
 import { useDebounce } from "react-use";
+import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
 
 type Step = "select-games" | "order-games";
 
 // https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
 
-function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
+type SelectGamesStepProps = {
+  setStep: (step: Step) => void;
+  games: Game[];
+  selectedGames: Game[];
+  selectedGamesLimit: number;
+  setSelectedGames: (games: Game[]) => void;
+};
+
+function SelectGamesStep({
+  setStep,
+  games,
+  selectedGames,
+  selectedGamesLimit,
+  setSelectedGames,
+}: SelectGamesStepProps) {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
+  const isDisabled = selectedGames.length !== selectedGamesLimit;
+  const isSelected = (game: Game) =>
+    selectedGames.some(({ id }) => id === game.id);
 
   useDebounce(() => setDebouncedSearchValue(searchValue), 300, [searchValue]);
 
@@ -42,23 +60,30 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
           />
 
           <div className="grid gap-4 grid-cols-3">
-            {bggCollection
-              .filter((entry) =>
-                entry.name
+            {games
+              .filter((game) =>
+                game.name
                   .toLowerCase()
                   .includes(debouncedSearchValue.toLowerCase())
               )
-              .map((entry) => (
+              .map((game) => (
                 <div
-                  key={entry.id}
+                  key={game.id}
                   className={cx(
                     "p-2 hover:bg-gray-200 cursor-pointer flex items-center",
                     {
-                      "bg-gray-300": false,
+                      "bg-gray-300": isSelected(game),
                     }
                   )}
+                  onClick={() => {
+                    setSelectedGames(
+                      isSelected(game)
+                        ? selectedGames.filter(({ id }) => id !== game.id)
+                        : [...selectedGames, game]
+                    );
+                  }}
                 >
-                  <BoardGame name={entry.name} thumbnail={entry.thumbnail} />
+                  <BoardGame name={game.name} thumbnail={game.thumbnail} />
                 </div>
               ))}
           </div>
@@ -68,28 +93,30 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
           <Heading>
             Selected{" "}
             <span className="block text-sm text-gray-500">
-              3 left to select
+              {selectedGamesLimit - selectedGames.length} left to select
             </span>
           </Heading>
 
           <div className="grid gap-2 mb-4">
-            <div className="flex items-center justify-between">
-              <BoardGame size="small" />
-              <XMarkIcon className="w-5 h-5 text-gray-500" />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <BoardGame size="small" />
-              <XMarkIcon className="w-5 h-5 text-gray-500" />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <BoardGame size="small" />
-              <XMarkIcon className="w-5 h-5 text-gray-500" />
-            </div>
+            {selectedGames.map((game) => (
+              <div key={game.id} className="flex items-center justify-between">
+                <BoardGame
+                  size="small"
+                  name={game.name}
+                  thumbnail={game.thumbnail}
+                />
+                <div>
+                  <XMarkIcon className="w-5 h-5 text-gray-500" />
+                </div>
+              </div>
+            ))}
           </div>
 
-          <Button className="w-full" onClick={() => setStep("order-games")}>
+          <Button
+            className="w-full"
+            onClick={() => setStep("order-games")}
+            disabled={isDisabled}
+          >
             Confirm
           </Button>
         </div>
@@ -98,29 +125,24 @@ function SelectGamesStep({ setStep }: { setStep: (step: Step) => void }) {
   );
 }
 
-function OrderGamesStep({ setStep }: { setStep: (step: Step) => void }) {
+type OrderGamesStepProps = {
+  selectedGames: Game[];
+  setStep: (step: Step) => void;
+};
+
+function OrderGamesStep({ selectedGames, setStep }: OrderGamesStepProps) {
   return (
     <div className="mx-auto">
       <div className="my-8">
         <Heading>Order games by priority:</Heading>
 
-        <div className="flex gap-4 items-center mt-4">
-          <Bars4Icon className="w-6 h-6 text-gray-500" />
-          <div className="text-gray-300 font-bold text-3xl">1</div>
-          <BoardGame />
-        </div>
-
-        <div className="flex gap-4 items-center mt-4">
-          <Bars4Icon className="w-6 h-6 text-gray-500" />
-          <div className="text-gray-300 font-bold text-3xl">2</div>
-          <BoardGame />
-        </div>
-
-        <div className="flex gap-4 items-center mt-4">
-          <Bars4Icon className="w-6 h-6 text-gray-500" />
-          <div className="text-gray-300 font-bold text-3xl">3</div>
-          <BoardGame />
-        </div>
+        {selectedGames.map((game, i) => (
+          <div key={game.id} className="flex gap-4 items-center mt-4">
+            <Bars4Icon className="w-6 h-6 text-gray-500" />
+            <div className="text-gray-300 font-bold text-3xl">{i + 1}</div>
+            <BoardGame name={game.name} thumbnail={game.thumbnail} />
+          </div>
+        ))}
       </div>
 
       <FormField htmlFor="name" label="Your name:">
@@ -144,6 +166,9 @@ function OrderGamesStep({ setStep }: { setStep: (step: Step) => void }) {
 export default function Page() {
   const [step, setStep] = useState<Step>("select-games");
   const router = useRouter();
+  const selectedGamesLimit = 5; // TODO backend
+  const games = bggCollection; // TODO backend
+  const [selectedGames, setSelectedGames] = useState<Game[]>([]);
 
   return (
     <div>
@@ -153,8 +178,19 @@ export default function Page() {
           router.push("/votings/1");
         }}
       >
-        {step === "select-games" && <SelectGamesStep setStep={setStep} />}
-        {step === "order-games" && <OrderGamesStep setStep={setStep} />}
+        {step === "select-games" && (
+          <SelectGamesStep
+            setStep={setStep}
+            games={games}
+            selectedGames={selectedGames}
+            selectedGamesLimit={selectedGamesLimit}
+            setSelectedGames={setSelectedGames}
+          />
+        )}
+
+        {step === "order-games" && (
+          <OrderGamesStep setStep={setStep} selectedGames={selectedGames} />
+        )}
       </Form>
     </div>
   );
