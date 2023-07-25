@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import PlusSmallIcon from "@heroicons/react/24/outline/PlusSmallIcon";
 import FormField from "./ui/FormField";
 import Form from "./ui/Form";
 import Button from "./ui/Button";
@@ -22,9 +21,6 @@ export default function Home() {
           label="Use the following BoardGameGeek accounts to create the voting list:"
         >
           <input type="text" name="accounts" id="accounts" />
-          <a href="#" className="flex">
-            <PlusSmallIcon className="w-6 h-6" /> add more
-          </a>
         </FormField>
 
         <FormField htmlFor="count" label="How many games players can select?">
