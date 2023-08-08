@@ -19,6 +19,7 @@ import Squares2X2Icon from "@heroicons/react/24/outline/Squares2X2Icon";
 
 type Step = "select-games" | "order-games";
 type ViewType = "list" | "grid";
+type PageSize = 21 | 52;
 
 // https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
 
@@ -40,6 +41,8 @@ function SelectGamesStep({
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [viewType, setViewType] = useState<ViewType>("grid");
+  const [pageSize, setPageSize] = useState<PageSize>(21);
+
   const isSelectionEnabled = selectedGames.length < selectedGamesLimit;
   const isSelected = (game: Game) =>
     selectedGames.some(({ id }) => id === game.id);
@@ -73,6 +76,7 @@ function SelectGamesStep({
               onClick={(e) => {
                 e.preventDefault();
                 setViewType("grid");
+                setPageSize(21);
               }}
             >
               <Squares2X2Icon className="w-6 h-6" />
@@ -86,25 +90,31 @@ function SelectGamesStep({
               onClick={(e) => {
                 e.preventDefault();
                 setViewType("list");
+                setPageSize(52);
               }}
             >
               <Bars4Icon className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="grid gap-4 grid-cols-3">
+          <div
+            className={cx(
+              "grid",
+              viewType === "list" ? "grid-cols-4" : "grid-cols-3 gap-1"
+            )}
+          >
             {games
               .filter((game) =>
                 game.name
                   .toLowerCase()
                   .includes(debouncedSearchValue.toLowerCase())
               )
-              .slice(0, 20)
+              .slice(0, pageSize)
               .map((game) => (
                 <div
                   key={game.id}
                   className={cx(
-                    "p-2 hover:bg-gray-100 cursor-pointer flex items-center",
+                    "p-2 m-1 hover:bg-gray-100 cursor-pointer flex items-center",
                     {
                       "bg-gray-300": isSelected(game),
                     }
@@ -119,10 +129,13 @@ function SelectGamesStep({
                     );
                   }}
                 >
-                  <BoardGame name={game.name} thumbnail={game.thumbnail} />
+                  <BoardGame
+                    name={game.name}
+                    thumbnail={game.thumbnail}
+                    size={viewType === "list" ? "small" : "regular"}
+                  />
                 </div>
               ))}
-            B
           </div>
 
           <div className="flex justify-center mt-8">
@@ -162,7 +175,7 @@ function SelectGamesStep({
                 />
 
                 <div
-                  className="cursor-pointer text-gray-500"
+                  className="cursor-pointer text-gray-500 ml-2"
                   onClick={(e) => {
                     setSelectedGames(
                       selectedGames.filter(({ id }) => id !== game.id)
