@@ -260,7 +260,7 @@ function OrderGamesStep({ selectedGames, setStep }: OrderGamesStepProps) {
       </div>
 
       <FormField htmlFor="name" label="Your name:">
-        <input type="text" name="name" id="name" className="w-full" />
+        <input type="text" name="name" id="name" className="w-full" required />
       </FormField>
 
       <div className="mt-4 flex gap-3 justify-center">
