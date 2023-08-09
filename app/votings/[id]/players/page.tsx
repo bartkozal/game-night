@@ -17,9 +17,17 @@ import ChevronLeftIcon from "@heroicons/react/24/outline/ChevronLeftIcon";
 import ChevronRightIcon from "@heroicons/react/24/outline/ChevronRightIcon";
 import Squares2X2Icon from "@heroicons/react/24/outline/Squares2X2Icon";
 
+const VIEW_TYPE_PAGE_SIZE = {
+  grid: 21,
+  list: 52,
+  all: 0,
+} as const;
+
+const DEFAULT_VIEW_TYPE = "grid";
+
 type Step = "select-games" | "order-games";
-type ViewType = "list" | "grid";
-type PageSize = 21 | 52;
+type ViewType = keyof typeof VIEW_TYPE_PAGE_SIZE;
+type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
 
 // https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
 
@@ -40,8 +48,10 @@ function SelectGamesStep({
 }: SelectGamesStepProps) {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
-  const [viewType, setViewType] = useState<ViewType>("grid");
-  const [pageSize, setPageSize] = useState<PageSize>(21);
+  const [viewType, setViewType] = useState<ViewType>(DEFAULT_VIEW_TYPE);
+  const [pageSize, setPageSize] = useState<PageSize>(
+    VIEW_TYPE_PAGE_SIZE[DEFAULT_VIEW_TYPE]
+  );
 
   const isSelectionEnabled = selectedGames.length < selectedGamesLimit;
   const isSelected = (game: Game) =>
@@ -68,33 +78,45 @@ function SelectGamesStep({
               onChange={(e) => setSearchValue(e.target.value)}
             />
 
-            <button
-              className={cx(
-                "ml-4",
-                viewType === "grid" ? "text-gray-700" : "text-gray-400"
-              )}
-              onClick={(e) => {
-                e.preventDefault();
-                setViewType("grid");
-                setPageSize(21);
-              }}
-            >
-              <Squares2X2Icon className="w-6 h-6" />
-            </button>
-
-            <button
-              className={cx(
-                "ml-2",
-                viewType === "list" ? "text-gray-700" : "text-gray-400"
-              )}
-              onClick={(e) => {
-                e.preventDefault();
-                setViewType("list");
-                setPageSize(52);
-              }}
-            >
-              <Bars4Icon className="w-6 h-6" />
-            </button>
+            <div className="grid grid-cols-3 gap-2 ml-4">
+              <button
+                className={cx(
+                  viewType === "grid" ? "text-gray-700" : "text-gray-400"
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setViewType("grid");
+                  setPageSize(VIEW_TYPE_PAGE_SIZE.grid);
+                }}
+              >
+                <Squares2X2Icon className="w-6 h-6" />
+              </button>
+              <button
+                className={cx(
+                  viewType === "list" ? "text-gray-700" : "text-gray-400"
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setViewType("list");
+                  setPageSize(VIEW_TYPE_PAGE_SIZE.list);
+                }}
+              >
+                <Bars4Icon className="w-6 h-6" />
+              </button>
+              <button
+                className={cx(
+                  "uppercase text-sm",
+                  viewType === "all" ? "text-gray-700" : "text-gray-400"
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setViewType("all");
+                  setPageSize(VIEW_TYPE_PAGE_SIZE.all);
+                }}
+              >
+                All
+              </button>
+            </div>
           </div>
 
           <div
@@ -109,7 +131,7 @@ function SelectGamesStep({
                   .toLowerCase()
                   .includes(debouncedSearchValue.toLowerCase())
               )
-              .slice(0, pageSize)
+              .slice(0, pageSize ? pageSize : games.length)
               .map((game) => (
                 <div
                   key={game.id}
@@ -138,23 +160,17 @@ function SelectGamesStep({
               ))}
           </div>
 
-          <div className="flex justify-center mt-8">
-            <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
-              <ChevronLeftIcon className="w-5 h-5" />
-            </button>
-            <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
-              1
-            </button>
-            <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
-              2
-            </button>
-            <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
-              3
-            </button>
-            <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
-              <ChevronRightIcon className="w-5 h-5" />
-            </button>
-          </div>
+          {viewType !== "all" && (
+            <div className="flex items-center justify-center mt-8">
+              <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
+                <ChevronLeftIcon className="w-5 h-5" />
+              </button>
+              <div>Page 0 of 0</div>
+              <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="w-1/4 ml-6 pl-6">
