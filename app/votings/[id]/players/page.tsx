@@ -6,7 +6,7 @@ import Form from "@/app/ui/Form";
 import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bars4Icon,
   XMarkIcon,
@@ -54,12 +54,19 @@ function SelectGamesStep({
   const [pageSize, setPageSize] = useState<PageSize>(
     VIEW_TYPE_PAGE_SIZE[DEFAULT_VIEW_TYPE]
   );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const isSelectionEnabled = selectedGames.length < selectedGamesLimit;
   const isSelected = (game: Game) =>
     selectedGames.some(({ id }) => id === game.id);
 
   useDebounce(() => setDebouncedSearchValue(searchValue), 300, [searchValue]);
+
+  useEffect(() => {
+    setPageSize(VIEW_TYPE_PAGE_SIZE[viewType]);
+  }, [viewType]);
+
+  const lastPage = Math.ceil(games.length / pageSize);
 
   return (
     <>
@@ -85,11 +92,7 @@ function SelectGamesStep({
                 className={cx(
                   viewType === "grid" ? "text-gray-700" : "text-gray-400"
                 )}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setViewType("grid");
-                  setPageSize(VIEW_TYPE_PAGE_SIZE.grid);
-                }}
+                onClick={() => setViewType("grid")}
               >
                 <Squares2X2Icon className="w-6 h-6" />
               </button>
@@ -97,11 +100,7 @@ function SelectGamesStep({
                 className={cx(
                   viewType === "list" ? "text-gray-700" : "text-gray-400"
                 )}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setViewType("list");
-                  setPageSize(VIEW_TYPE_PAGE_SIZE.list);
-                }}
+                onClick={() => setViewType("list")}
               >
                 <Bars4Icon className="w-6 h-6" />
               </button>
@@ -110,11 +109,7 @@ function SelectGamesStep({
                   "uppercase text-sm",
                   viewType === "all" ? "text-gray-700" : "text-gray-400"
                 )}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setViewType("all");
-                  setPageSize(VIEW_TYPE_PAGE_SIZE.all);
-                }}
+                onClick={() => setViewType("all")}
               >
                 All
               </button>
@@ -133,7 +128,10 @@ function SelectGamesStep({
                   .toLowerCase()
                   .includes(debouncedSearchValue.toLowerCase())
               )
-              .slice(0, pageSize ? pageSize : games.length)
+              .slice(
+                (currentPage - 1) * pageSize,
+                pageSize ? currentPage * pageSize : games.length
+              )
               .map((game) => (
                 <div
                   key={game.id}
@@ -164,11 +162,33 @@ function SelectGamesStep({
 
           {viewType !== "all" && (
             <div className="flex items-center justify-center mt-8">
-              <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
+              <button
+                className={cx(
+                  "w-7 h-7 flex items-center justify-center mx-1",
+                  currentPage === 1
+                    ? "text-gray-400"
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
                 <ChevronLeftIcon className="w-5 h-5" />
               </button>
-              <div>Page 0 of 0</div>
-              <button className="w-7 h-7 flex items-center justify-center mx-1 hover:bg-gray-100">
+
+              <div>
+                Page {currentPage} of {lastPage}
+              </div>
+
+              <button
+                className={cx(
+                  "w-7 h-7 flex items-center justify-center mx-1",
+                  currentPage === lastPage
+                    ? "text-gray-400"
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === lastPage}
+              >
                 <ChevronRightIcon className="w-5 h-5" />
               </button>
             </div>
@@ -266,26 +286,26 @@ export default function Page() {
 
   return (
     <div>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push("/votings/1");
-        }}
-      >
-        {step === "select-games" && (
-          <SelectGamesStep
-            setStep={setStep}
-            games={games}
-            selectedGames={selectedGames}
-            selectedGamesLimit={selectedGamesLimit}
-            setSelectedGames={setSelectedGames}
-          />
-        )}
+      {step === "select-games" && (
+        <SelectGamesStep
+          setStep={setStep}
+          games={games}
+          selectedGames={selectedGames}
+          selectedGamesLimit={selectedGamesLimit}
+          setSelectedGames={setSelectedGames}
+        />
+      )}
 
-        {step === "order-games" && (
+      {step === "order-games" && (
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            router.push("/votings/1");
+          }}
+        >
           <OrderGamesStep setStep={setStep} selectedGames={selectedGames} />
-        )}
-      </Form>
+        </Form>
+      )}
     </div>
   );
 }
