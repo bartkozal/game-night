@@ -7,15 +7,17 @@ import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Bars4Icon from "@heroicons/react/24/outline/Bars4Icon";
-import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
+import {
+  Bars4Icon,
+  XMarkIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/outline";
 import cx from "classnames";
 import bggCollection from "@/app/__tests__/bgg-collection.json";
 import { useDebounce } from "react-use";
 import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
-import ChevronLeftIcon from "@heroicons/react/24/outline/ChevronLeftIcon";
-import ChevronRightIcon from "@heroicons/react/24/outline/ChevronRightIcon";
-import Squares2X2Icon from "@heroicons/react/24/outline/Squares2X2Icon";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 21,

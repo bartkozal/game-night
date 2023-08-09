@@ -19,8 +19,8 @@ function getThumbnailSize(size: Props["size"]): number {
 
 export default function BoardGame({
   size = "regular",
-  name = "Catan: Gra planszowa",
-  thumbnail = "https://cf.geekdo-images.com/7bd4Zhbzdc_57GEpnd_zjA__thumb/img/yY27TheKJozDYkCXczDLgrCIo-M=/fit-in/200x150/filters:strip_icc()/pic2901599.jpg",
+  name,
+  thumbnail,
 }: Props) {
   return (
     <div

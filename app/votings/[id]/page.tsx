@@ -2,8 +2,12 @@
 
 import BoardGame from "@/app/ui/BoardGame";
 import Heading from "@/app/ui/Heading";
-import { useEffect, useRef } from "react";
-import ClipboardDocumentListIcon from "@heroicons/react/24/outline/ClipboardDocumentListIcon";
+import { useEffect, useRef, useState } from "react";
+import { useCopyToClipboard } from "react-use";
+import {
+  CheckIcon,
+  ClipboardDocumentListIcon,
+} from "@heroicons/react/24/outline";
 
 type Props = {
   params: {
@@ -13,10 +17,22 @@ type Props = {
 
 export default function Page({ params }: Props) {
   const shareUrlInput = useRef<HTMLInputElement>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [, copyToClipboard] = useCopyToClipboard();
+  const playersPageUrl =
+    global.location.origin + "/votings/" + params.id + "/players";
 
   useEffect(() => {
     shareUrlInput.current?.select();
   }, []);
+
+  useEffect(() => {
+    if (isCopied) {
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
+    }
+  }, [isCopied]);
 
   return (
     <div>
@@ -32,14 +48,22 @@ export default function Page({ params }: Props) {
             id="url"
             className="w-full"
             readOnly
-            value={
-              global.location.origin + "/votings/" + params.id + "/players"
-            }
+            value={playersPageUrl}
             ref={shareUrlInput}
           />
 
           <button>
-            <ClipboardDocumentListIcon className="w-6 h-6 text-gray-600 ml-3" />
+            {isCopied ? (
+              <CheckIcon className="w-6 h-6 text-green-600 ml-3" />
+            ) : (
+              <ClipboardDocumentListIcon
+                className="w-6 h-6 text-gray-600 ml-3"
+                onClick={() => {
+                  copyToClipboard(playersPageUrl);
+                  setIsCopied(true);
+                }}
+              />
+            )}
           </button>
         </div>
       </div>
@@ -52,7 +76,10 @@ export default function Page({ params }: Props) {
 
           <div className="flex gap-4 items-center">
             <div className="text-gray-300 font-bold text-3xl">1</div>
-            <BoardGame />
+            <BoardGame
+              thumbnail="https://cf.geekdo-images.com/7bd4Zhbzdc_57GEpnd_zjA__thumb/img/yY27TheKJozDYkCXczDLgrCIo-M=/fit-in/200x150/filters:strip_icc()/pic2901599.jpg"
+              name="Catan: Gra planszowa"
+            />
             <div className="text-gray-400">8 pts</div>
           </div>
         </div>
@@ -63,7 +90,11 @@ export default function Page({ params }: Props) {
           <h4 className="mb-2 border-b-2 inline-block">Bart</h4>
           <div className="flex gap-2 items-center">
             <div className="text-gray-300 font-bold text-base">1</div>
-            <BoardGame size="small" />
+            <BoardGame
+              size="small"
+              thumbnail="https://cf.geekdo-images.com/7bd4Zhbzdc_57GEpnd_zjA__thumb/img/yY27TheKJozDYkCXczDLgrCIo-M=/fit-in/200x150/filters:strip_icc()/pic2901599.jpg"
+              name="Catan: Gra planszowa"
+            />
           </div>
         </div>
       </div>
