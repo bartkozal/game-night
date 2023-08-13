@@ -20,7 +20,7 @@ export default function Page({ params }: Props) {
   const [isCopied, setIsCopied] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
   const playersPageUrl =
-    global.location.origin + "/votings/" + params.id + "/players";
+    global.location.origin + "/nights/" + params.id + "/voting";
 
   useEffect(() => {
     shareUrlInput.current?.select();

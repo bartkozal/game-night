@@ -216,7 +216,7 @@ export default function Page() {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            router.push("/votings/1");
+            router.push("/nights/1");
           }}
         >
           <div>

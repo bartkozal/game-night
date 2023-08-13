@@ -14,7 +14,7 @@ export default function Home() {
       <Form
         onSubmit={(e) => {
           e.preventDefault();
-          router.push("/votings/1");
+          router.push("/nights/1");
         }}
       >
         <FormField
@@ -56,7 +56,7 @@ export default function Home() {
         </FormField>
 
         <div>
-          <Button type="submit">Create voting list</Button>
+          <Button type="submit">Schedule game night</Button>
         </div>
       </Form>
     </main>
