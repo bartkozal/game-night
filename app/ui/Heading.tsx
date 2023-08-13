@@ -6,7 +6,7 @@ type Props = {
 
 export default function Heading({ children, className, ...props }: Props) {
   return (
-    <h3 className={cx("text-lg mb-4", className)} {...props}>
+    <h3 className={cx("text-lg", className ? className : "mb-4")} {...props}>
       {children}
     </h3>
   );

@@ -14,15 +14,17 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import cx from "classnames";
-import bggCollection from "@/app/__tests__/bgg-collection.json";
 import { useDebounce } from "react-use";
-import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
+import parseBggCollectionPayload, {
+  BggCollectionEntry as Game,
+} from "@/app/utils/parseBggCollectionPayload";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
+import useSWR from "swr";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
@@ -35,11 +37,18 @@ const DEFAULT_VIEW_TYPE = "grid";
 type ViewType = keyof typeof VIEW_TYPE_PAGE_SIZE;
 type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
 
-// https://boardgamegeek.com/xmlapi2/collection?username=bartkozal&own=1&excludesubtype=boardgameexpansion
+const useGames = (username: string) =>
+  useSWR(`bgg/${username}`, () =>
+    fetch(
+      `https://boardgamegeek.com/xmlapi2/collection?username=${username}&own=1&excludesubtype=boardgameexpansion`
+    )
+      .then((res) => res.text())
+      .then((xml) => parseBggCollectionPayload(xml))
+  );
 
 export default function Page() {
   const selectedGamesLimit = 5; // TODO backend
-  const games = bggCollection; // TODO backend
+  const { data: games = [], isLoading } = useGames("bartkozal");
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [viewType, setViewType] = useState<ViewType>(DEFAULT_VIEW_TYPE);
@@ -70,6 +79,10 @@ export default function Page() {
 
     setSelectedGames(items);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex divide-x">
@@ -214,54 +227,62 @@ export default function Page() {
             </div>
           </div>
 
-          <DragDropContext onDragEnd={handleOrderChange}>
-            <Droppable droppableId="selected-games">
-              {(droppable) => (
-                <div
-                  className="grid mb-4"
-                  {...droppable.droppableProps}
-                  ref={droppable.innerRef}
-                >
-                  {selectedGames.map((game, index) => (
-                    <Draggable
-                      key={game.id}
-                      draggableId={game.id}
-                      index={index}
-                    >
-                      {(draggable) => (
-                        <div
-                          className="flex items-center justify-between my-1"
-                          ref={draggable.innerRef}
-                          {...draggable.draggableProps}
-                          {...draggable.dragHandleProps}
-                        >
-                          <div className="flex items-center gap-2">
-                            <Bars4Icon className="w-4 h-4 text-gray-500 shrink-0" />
+          {selectedGames.length === 0 ? (
+            <div className="border border-dashed border-gray-400 p-3 text-center text-gray-400 uppercase text-xs rounded">
+              No games selected
+            </div>
+          ) : (
+            <DragDropContext onDragEnd={handleOrderChange}>
+              <Droppable droppableId="selected-games">
+                {(droppable) => (
+                  <div
+                    className="grid"
+                    {...droppable.droppableProps}
+                    ref={droppable.innerRef}
+                  >
+                    {selectedGames.map((game, index) => (
+                      <Draggable
+                        key={game.id}
+                        draggableId={game.id}
+                        index={index}
+                      >
+                        {(draggable) => (
+                          <div
+                            className="flex items-center justify-between my-1"
+                            ref={draggable.innerRef}
+                            {...draggable.draggableProps}
+                            {...draggable.dragHandleProps}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Bars4Icon className="w-4 h-4 text-gray-500 shrink-0" />
 
-                            <BoardGame
-                              size="small"
-                              name={game.name}
-                              thumbnail={game.thumbnail}
+                              <BoardGame
+                                size="small"
+                                name={game.name}
+                                thumbnail={game.thumbnail}
+                              />
+                            </div>
+
+                            <XMarkIcon
+                              className="w-4 h-4 cursor-pointer text-gray-500 shrink-0"
+                              onClick={() => {
+                                setSelectedGames(
+                                  selectedGames.filter(
+                                    ({ id }) => id !== game.id
+                                  )
+                                );
+                              }}
                             />
                           </div>
-
-                          <XMarkIcon
-                            className="w-4 h-4 cursor-pointer text-gray-500 shrink-0"
-                            onClick={() => {
-                              setSelectedGames(
-                                selectedGames.filter(({ id }) => id !== game.id)
-                              );
-                            }}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {droppable.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+                        )}
+                      </Draggable>
+                    ))}
+                    {droppable.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
 
           {!gamesAreNotSelected && (
             <input
