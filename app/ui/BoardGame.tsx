@@ -7,16 +7,6 @@ type Props = {
   thumbnail: string;
 };
 
-function getThumbnailSize(size: Props["size"]): number {
-  switch (size) {
-    case "small":
-      return 20;
-    case "regular":
-    default:
-      return 50;
-  }
-}
-
 export default function BoardGame({
   size = "regular",
   name,
@@ -29,17 +19,17 @@ export default function BoardGame({
         "gap-2": size === "small",
       })}
     >
-      <div className="">
-        <Image
-          src={thumbnail}
-          width={(getThumbnailSize(size) * 4) / 3}
-          height={getThumbnailSize(size)}
-          alt={name}
-        />
+      <div
+        className={cx("relative shrink-0", {
+          "w-16 h-16": size === "regular",
+          "w-6 h-6": size === "small",
+        })}
+      >
+        <Image src={thumbnail} alt={name} fill={true} objectFit="contain" />
       </div>
 
       <h4
-        className={cx({
+        className={cx("line-clamp-1", {
           "line-clamp-2": size === "regular",
           "line-clamp-1 text-sm": size === "small",
         })}

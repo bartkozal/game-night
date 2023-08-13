@@ -20,8 +20,8 @@ import { useDebounce } from "react-use";
 import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
 
 const VIEW_TYPE_PAGE_SIZE = {
-  grid: 21,
-  list: 52,
+  grid: 24,
+  list: 72,
   all: 0,
 } as const;
 
@@ -60,8 +60,8 @@ export default function Page() {
     <div className="flex divide-x">
       <div className="w-3/4">
         <Heading>
-          Select {selectedGamesLimit} games you would like to play on July 23rd
-          at 19:00
+          Select and order by preference {selectedGamesLimit} games you would
+          like to play on July 23rd at 19:00
         </Heading>
 
         <div className="flex items-center mb-4">
@@ -107,7 +107,7 @@ export default function Page() {
         <div
           className={cx(
             "grid",
-            viewType === "list" ? "grid-cols-4" : "grid-cols-3 gap-1"
+            viewType === "list" ? "grid-cols-4 gap-1" : "grid-cols-3 gap-2"
           )}
         >
           {games
@@ -124,7 +124,7 @@ export default function Page() {
               <div
                 key={game.id}
                 className={cx(
-                  "p-2 m-1 hover:bg-gray-100 cursor-pointer flex items-center",
+                  "p-2 hover:bg-gray-100 cursor-pointer flex items-center",
                   {
                     "bg-gray-300": isSelected(game),
                   }
@@ -199,7 +199,7 @@ export default function Page() {
           </div>
 
           <div className="grid gap-2 mb-4">
-            {selectedGames.map((game, index) => (
+            {selectedGames.map((game) => (
               <div key={game.id} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Bars4Icon className="cursor-grab w-4 h-4 text-gray-500 shrink-0" />
