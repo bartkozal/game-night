@@ -3,7 +3,6 @@
 import BoardGame from "@/app/ui/BoardGame";
 import Button from "@/app/ui/Button";
 import Form from "@/app/ui/Form";
-import FormField from "@/app/ui/FormField";
 import Heading from "@/app/ui/Heading";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,10 +17,16 @@ import cx from "classnames";
 import bggCollection from "@/app/__tests__/bgg-collection.json";
 import { useDebounce } from "react-use";
 import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
-  list: 72,
+  list: 80,
   all: 0,
 } as const;
 
@@ -55,6 +60,16 @@ export default function Page() {
   const isSelected = (game: Game) =>
     selectedGames.some(({ id }) => id === game.id);
   const lastPage = Math.ceil(games.length / pageSize);
+
+  const handleOrderChange = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const items = Array.from(selectedGames);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setSelectedGames(items);
+  };
 
   return (
     <div className="flex divide-x">
@@ -124,7 +139,8 @@ export default function Page() {
               <div
                 key={game.id}
                 className={cx(
-                  "p-2 hover:bg-gray-100 cursor-pointer flex items-center",
+                  "hover:bg-gray-100 cursor-pointer flex items-center",
+                  viewType === "list" ? "p-1" : "p-2",
                   {
                     "bg-gray-300": isSelected(game),
                   }
@@ -148,7 +164,7 @@ export default function Page() {
             ))}
         </div>
 
-        {viewType !== "all" && (
+        {viewType !== "all" && lastPage !== 1 && (
           <div className="flex items-center justify-center mt-8">
             <button
               className={cx(
@@ -198,30 +214,54 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="grid gap-2 mb-4">
-            {selectedGames.map((game) => (
-              <div key={game.id} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Bars4Icon className="cursor-grab w-4 h-4 text-gray-500 shrink-0" />
+          <DragDropContext onDragEnd={handleOrderChange}>
+            <Droppable droppableId="selected-games">
+              {(droppable) => (
+                <div
+                  className="grid mb-4"
+                  {...droppable.droppableProps}
+                  ref={droppable.innerRef}
+                >
+                  {selectedGames.map((game, index) => (
+                    <Draggable
+                      key={game.id}
+                      draggableId={game.id}
+                      index={index}
+                    >
+                      {(draggable) => (
+                        <div
+                          className="flex items-center justify-between my-1"
+                          ref={draggable.innerRef}
+                          {...draggable.draggableProps}
+                          {...draggable.dragHandleProps}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Bars4Icon className="w-4 h-4 text-gray-500 shrink-0" />
 
-                  <BoardGame
-                    size="small"
-                    name={game.name}
-                    thumbnail={game.thumbnail}
-                  />
+                            <BoardGame
+                              size="small"
+                              name={game.name}
+                              thumbnail={game.thumbnail}
+                            />
+                          </div>
+
+                          <XMarkIcon
+                            className="w-4 h-4 cursor-pointer text-gray-500 shrink-0"
+                            onClick={() => {
+                              setSelectedGames(
+                                selectedGames.filter(({ id }) => id !== game.id)
+                              );
+                            }}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {droppable.placeholder}
                 </div>
-
-                <XMarkIcon
-                  className="w-4 h-4 cursor-pointer text-gray-500 shrink-0"
-                  onClick={() => {
-                    setSelectedGames(
-                      selectedGames.filter(({ id }) => id !== game.id)
-                    );
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+              )}
+            </Droppable>
+          </DragDropContext>
 
           {!gamesAreNotSelected && (
             <input

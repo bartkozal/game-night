@@ -25,7 +25,13 @@ export default function BoardGame({
           "w-6 h-6": size === "small",
         })}
       >
-        <Image src={thumbnail} alt={name} fill={true} objectFit="contain" />
+        <Image
+          src={thumbnail}
+          alt={name}
+          fill={true}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw"
+        />
       </div>
 
       <h4

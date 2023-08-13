@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^16.3.0",
     "@heroicons/react": "^2.0.18",
     "@tailwindcss/forms": "^0.5.4",
     "@testing-library/react": "^14.0.0",
