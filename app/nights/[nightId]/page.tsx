@@ -11,7 +11,7 @@ import {
 
 type Props = {
   params: {
-    id: string;
+    nightId: string;
   };
 };
 
@@ -19,8 +19,7 @@ export default function Page({ params }: Props) {
   const shareUrlInput = useRef<HTMLInputElement>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
-  const playersPageUrl =
-    global.location.origin + "/nights/" + params.id + "/voting";
+  const playersPageUrl = `${global.location.origin}/nights/${params.nightId}/voting`;
 
   useEffect(() => {
     shareUrlInput.current?.select();

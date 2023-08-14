@@ -37,6 +37,12 @@ const DEFAULT_VIEW_TYPE = "grid";
 type ViewType = keyof typeof VIEW_TYPE_PAGE_SIZE;
 type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
 
+type Props = {
+  params: {
+    nightId: string;
+  };
+};
+
 const useGames = (username: string) =>
   useSWR(`bgg/${username}`, () =>
     fetch(
@@ -46,7 +52,7 @@ const useGames = (username: string) =>
       .then((xml) => parseBggCollectionPayload(xml))
   );
 
-export default function Page() {
+export default function Page({ params }: Props) {
   const selectedGamesLimit = 5; // TODO backend
   const { data: games = [], isLoading } = useGames("bartkozal");
   const [searchValue, setSearchValue] = useState("");
@@ -216,7 +222,7 @@ export default function Page() {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            router.push("/nights/1");
+            router.push(`/nights/${params.nightId}`);
           }}
         >
           <div>
