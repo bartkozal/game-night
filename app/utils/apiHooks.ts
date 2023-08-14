@@ -1,6 +1,8 @@
 import parseBggCollectionPayload from "./parseBggCollectionPayload";
 import supabase from "./supabase";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { InsertData } from "@/types/database";
 
 export const useFetchBggCollection = (username: string) =>
   useSWR(`bgg/collection/${username}`, async () => {
@@ -13,8 +15,10 @@ export const useFetchBggCollection = (username: string) =>
   });
 
 export const useInsertNight = () =>
-  useSWR("nights", async () => {
-    const { data } = await supabase.from("nights").select();
-
-    return data;
-  });
+  useSWRMutation(
+    "nights",
+    async (_, { arg }: { arg: InsertData<"nights"> }) => {
+      const { data } = await supabase.from("nights").insert(arg).select();
+      return data;
+    }
+  );

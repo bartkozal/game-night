@@ -5,54 +5,76 @@ import FormField from "./ui/FormField";
 import Form from "./ui/Form";
 import Button from "./ui/Button";
 import dayjs from "dayjs";
-import { FormEvent } from "react";
+import { useInsertNight } from "./utils/apiHooks";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type FormData = {
+  bgg_account: string;
+  games_limit: number;
+  expansions: boolean;
+  scheduled_at: string;
+};
 
 export default function Home() {
   const router = useRouter();
+  const { register, handleSubmit } = useForm<FormData>();
+  const { trigger } = useInsertNight();
 
-  const createNight = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    router.push("/nights/1");
+  const createNight: SubmitHandler<FormData> = async (formData) => {
+    const nights = await trigger(formData);
+
+    if (!nights) return;
+
+    router.push(`/nights/${nights[0].id}`);
   };
 
   return (
     <main>
-      <Form onSubmit={createNight}>
+      <Form onSubmit={handleSubmit(createNight)}>
         <FormField
-          htmlFor="accounts"
+          htmlFor="bgg_account"
           label="BoardGameGeek account used to create the voting list:"
         >
-          <input type="text" name="accounts" id="accounts" required />
+          <input
+            type="text"
+            id="bgg_account"
+            {...register("bgg_account", { required: true })}
+          />
         </FormField>
 
-        <FormField htmlFor="count" label="How many games players can select?">
+        <FormField
+          htmlFor="games_limit"
+          label="How many games players can select?"
+        >
           <input
             type="number"
-            name="count"
-            id="count"
             defaultValue={5}
-            min={1}
+            id="games_limit"
+            {...register("games_limit", { required: true, min: 1, max: 30 })}
           />
         </FormField>
 
         <FormField htmlFor="expansions" label="Include expansions?">
-          <select name="expansions" id="expansions">
+          <select
+            id="expansions"
+            defaultValue="false"
+            {...register("expansions", { required: true })}
+          >
             <option value="false">No</option>
             <option value="true">Yes</option>
           </select>
         </FormField>
 
-        <FormField htmlFor="schedule-at" label="When are you going to play?">
+        <FormField htmlFor="scheduled_at" label="When are you going to play?">
           <input
             type="datetime-local"
-            name="schedule-at"
-            id="schedule-at"
+            id="scheduled_at"
             defaultValue={dayjs()
               .add(1, "day")
               .hour(20)
               .minute(0)
               .format("YYYY-MM-DDTHH:mm")}
-            required
+            {...register("scheduled_at", { required: true })}
           />
         </FormField>
 

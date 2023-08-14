@@ -34,7 +34,7 @@ export interface Database {
           expansions: boolean
           games_limit: number
           id: string
-          schedulet_at: string
+          scheduled_at: string
         }
         Insert: {
           bgg_account: string
@@ -42,7 +42,7 @@ export interface Database {
           expansions: boolean
           games_limit: number
           id?: string
-          schedulet_at: string
+          scheduled_at: string
         }
         Update: {
           bgg_account?: string
@@ -50,7 +50,7 @@ export interface Database {
           expansions?: boolean
           games_limit?: number
           id?: string
-          schedulet_at?: string
+          scheduled_at?: string
         }
         Relationships: []
       }
