@@ -37,7 +37,7 @@ type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
 
 type Props = {
   params: {
-    nightId: string;
+    id: string;
   };
 };
 
@@ -211,7 +211,7 @@ export default function Page({ params }: Props) {
         <Form
           onSubmit={(e) => {
             e.preventDefault();
-            router.push(`/nights/${params.nightId}`);
+            router.push(`/nights/${params.id}`);
           }}
         >
           <div>
