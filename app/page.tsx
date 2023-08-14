@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import FormField from "./ui/FormField";
 import Form from "./ui/Form";
 import Button from "./ui/Button";
-import dayjs from "dayjs";
 import { useInsertNight } from "./utils/apiHooks";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { getDateTimeOneDayFromNow } from "./utils/datetime";
 
 type FormData = {
   bgg_account: string;
@@ -21,11 +21,11 @@ export default function Home() {
   const { trigger } = useInsertNight();
 
   const createNight: SubmitHandler<FormData> = async (formData) => {
-    const nights = await trigger(formData);
+    const night = await trigger(formData);
 
-    if (!nights) return;
+    if (!night) return;
 
-    router.push(`/nights/${nights[0].id}`);
+    router.push(`/nights/${night.id}`);
   };
 
   return (
@@ -69,11 +69,7 @@ export default function Home() {
           <input
             type="datetime-local"
             id="scheduled_at"
-            defaultValue={dayjs()
-              .add(1, "day")
-              .hour(20)
-              .minute(0)
-              .format("YYYY-MM-DDTHH:mm")}
+            defaultValue={getDateTimeOneDayFromNow()}
             {...register("scheduled_at", { required: true })}
           />
         </FormField>

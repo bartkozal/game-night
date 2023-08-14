@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import parseBggCollectionPayload from "../parseBggCollectionPayload";
+import { parseCollectionPayload } from "../bgg";
 // @ts-expect-error
 import bggCollectionPayload from "./bgg-collection-payload.xml?raw";
 
@@ -18,7 +18,7 @@ index: 2
 */
 
 test("bggResponseParser", () => {
-  const bggCollection = parseBggCollectionPayload(bggCollectionPayload);
+  const bggCollection = parseCollectionPayload(bggCollectionPayload);
 
   expect(bggCollection.length).toEqual(207);
   expect(bggCollection[2]).toEqual({

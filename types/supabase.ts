@@ -35,6 +35,7 @@ export interface Database {
           games_limit: number
           id: string
           scheduled_at: string
+          voting_token: string
         }
         Insert: {
           bgg_account: string
@@ -43,6 +44,7 @@ export interface Database {
           games_limit: number
           id?: string
           scheduled_at: string
+          voting_token?: string
         }
         Update: {
           bgg_account?: string
@@ -51,6 +53,7 @@ export interface Database {
           games_limit?: number
           id?: string
           scheduled_at?: string
+          voting_token?: string
         }
         Relationships: []
       }

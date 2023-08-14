@@ -15,14 +15,15 @@ import {
 } from "@heroicons/react/24/outline";
 import cx from "classnames";
 import { useDebounce } from "react-use";
-import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
+import { BggCollectionEntry as Game } from "@/app/utils/bgg";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { useFetchBggCollection } from "@/app/utils/apiHooks";
+import { useFetchBggCollection, useFetchNight } from "@/app/utils/apiHooks";
+import { humanizeDateTime } from "@/app/utils/datetime";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
@@ -42,8 +43,9 @@ type Props = {
 };
 
 export default function Page({ params }: Props) {
-  const selectedGamesLimit = 5; // TODO backend
-  const { data: games = [], isLoading } = useFetchBggCollection("bartkozal");
+  const { data: night, isLoading: isNightLoading } = useFetchNight(params.id);
+  const { data: games = [], isLoading: isBggCollectionLoading } =
+    useFetchBggCollection("bartkozal");
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [viewType, setViewType] = useState<ViewType>(DEFAULT_VIEW_TYPE);
@@ -60,6 +62,7 @@ export default function Page({ params }: Props) {
     setPageSize(VIEW_TYPE_PAGE_SIZE[viewType]);
   }, [viewType]);
 
+  const selectedGamesLimit = night?.games_limit ?? 0;
   const gamesAreNotSelected = selectedGames.length < selectedGamesLimit;
   const isSelected = (game: Game) =>
     selectedGames.some(({ id }) => id === game.id);
@@ -75,7 +78,7 @@ export default function Page({ params }: Props) {
     setSelectedGames(items);
   };
 
-  if (isLoading) {
+  if (isNightLoading || isBggCollectionLoading) {
     return <div>Loading...</div>;
   }
 
@@ -84,7 +87,7 @@ export default function Page({ params }: Props) {
       <div className="w-3/4">
         <Heading>
           Select and order by preference {selectedGamesLimit} games you would
-          like to play on July 23rd at 19:00
+          like to play on {humanizeDateTime(night?.scheduled_at)}
         </Heading>
 
         <div className="flex items-center mb-4">

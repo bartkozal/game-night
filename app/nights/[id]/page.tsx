@@ -8,6 +8,8 @@ import {
   CheckIcon,
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
+import { useFetchNight } from "@/app/utils/apiHooks";
+import { humanizeDateTime } from "@/app/utils/datetime";
 
 type Props = {
   params: {
@@ -16,10 +18,11 @@ type Props = {
 };
 
 export default function Page({ params }: Props) {
+  const { data: night, isLoading } = useFetchNight(params.id);
   const shareUrlInput = useRef<HTMLInputElement>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
-  const playersPageUrl = `${global.location.origin}/nights/${params.id}/voting?token=`;
+  const playersPageUrl = `${global.location.origin}/nights/${params.id}/voting?token=${night?.voting_token}`;
 
   useEffect(() => {
     shareUrlInput.current?.select();
@@ -32,6 +35,8 @@ export default function Page({ params }: Props) {
       }, 1500);
     }
   }, [isCopied]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div>
@@ -70,7 +75,8 @@ export default function Page({ params }: Props) {
       <div className="flex">
         <div className="w-2/3">
           <Heading>
-            Games selected for the game night on July 23rd at 19:00
+            Games selected for the game night on{" "}
+            {humanizeDateTime(night?.scheduled_at)}
           </Heading>
 
           <div className="flex gap-4 items-center">

@@ -4,9 +4,7 @@ export type BggCollectionEntry = {
   thumbnail: string;
 };
 
-export default function parseBggCollectionPayload(
-  bggCollectionPayload: string
-) {
+export function parseCollectionPayload(bggCollectionPayload: string) {
   const parser = new DOMParser();
   const xml = parser.parseFromString(bggCollectionPayload, "text/xml");
   const parsedValue: BggCollectionEntry[] = [];

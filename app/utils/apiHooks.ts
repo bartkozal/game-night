@@ -1,4 +1,4 @@
-import parseBggCollectionPayload from "./parseBggCollectionPayload";
+import { parseCollectionPayload } from "./bgg";
 import supabase from "./supabase";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -11,14 +11,29 @@ export const useFetchBggCollection = (username: string) =>
     );
     const xml = await res.text();
 
-    return parseBggCollectionPayload(xml);
+    return parseCollectionPayload(xml);
+  });
+
+export const useFetchNight = (id: string) =>
+  useSWR(`nights/${id}`, async () => {
+    const { data } = await supabase
+      .from("nights")
+      .select()
+      .eq("id", id)
+      .single();
+
+    return data;
   });
 
 export const useInsertNight = () =>
   useSWRMutation(
     "nights",
     async (_, { arg }: { arg: InsertData<"nights"> }) => {
-      const { data } = await supabase.from("nights").insert(arg).select();
+      const { data } = await supabase
+        .from("nights")
+        .insert(arg)
+        .select()
+        .single();
       return data;
     }
   );
