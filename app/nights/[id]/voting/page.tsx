@@ -22,8 +22,14 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { useFetchBggCollection, useFetchNight } from "@/app/utils/apiHooks";
+import {
+  useFetchBggCollection,
+  useFetchNight,
+  useInsertVote,
+} from "@/app/utils/apiHooks";
 import { humanizeDateTime } from "@/app/utils/datetime";
+import LoadingState from "@/app/ui/LoadingState";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
@@ -36,6 +42,10 @@ const DEFAULT_VIEW_TYPE = "grid";
 type ViewType = keyof typeof VIEW_TYPE_PAGE_SIZE;
 type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
 
+type FormData = {
+  voter_name: string;
+};
+
 type Props = {
   params: {
     id: string;
@@ -46,6 +56,8 @@ export default function Page({ params }: Props) {
   const { data: night, isLoading: isNightLoading } = useFetchNight(params.id);
   const { data: games = [], isLoading: isBggCollectionLoading } =
     useFetchBggCollection("bartkozal");
+  const { trigger } = useInsertVote();
+
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [viewType, setViewType] = useState<ViewType>(DEFAULT_VIEW_TYPE);
@@ -55,6 +67,7 @@ export default function Page({ params }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
   const router = useRouter();
+  const { register, handleSubmit } = useForm<FormData>();
 
   useDebounce(() => setDebouncedSearchValue(searchValue), 300, [searchValue]);
 
@@ -78,8 +91,23 @@ export default function Page({ params }: Props) {
     setSelectedGames(items);
   };
 
+  const createVote: SubmitHandler<FormData> = (formData) => {
+    const vote = trigger({
+      voter_name: formData.voter_name,
+      night_id: params.id,
+      selected_games: selectedGames.map((game, i) => ({
+        ...game,
+        rank: i + 1,
+      })),
+    });
+
+    if (!vote) return;
+
+    router.push(`/nights/${params.id}`);
+  };
+
   if (isNightLoading || isBggCollectionLoading) {
-    return <div>Loading...</div>;
+    return <LoadingState />;
   }
 
   return (
@@ -211,12 +239,7 @@ export default function Page({ params }: Props) {
       </div>
 
       <div className="w-1/4 ml-6 pl-6">
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            router.push(`/nights/${params.id}`);
-          }}
-        >
+        <Form onSubmit={handleSubmit(createVote)}>
           <div>
             <Heading className="mb-0">Selected</Heading>
 
@@ -285,11 +308,9 @@ export default function Page({ params }: Props) {
           {!gamesAreNotSelected && (
             <input
               type="text"
-              name="name"
-              id="name"
               className="w-full text-sm"
               placeholder="Provide your name..."
-              required
+              {...register("voter_name", { required: true })}
             />
           )}
 

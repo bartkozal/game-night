@@ -2,7 +2,7 @@ import { parseCollectionPayload } from "./bgg";
 import supabase from "./supabase";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { InsertData } from "@/types/database";
+import { InsertData, SelectedGamesJson } from "@/types/database";
 
 export const useFetchBggCollection = (username: string) =>
   useSWR(`bgg/collection/${username}`, async () => {
@@ -31,6 +31,24 @@ export const useInsertNight = () =>
     async (_, { arg }: { arg: InsertData<"nights"> }) => {
       const { data } = await supabase
         .from("nights")
+        .insert(arg)
+        .select()
+        .single();
+      return data;
+    }
+  );
+
+export const useInsertVote = () =>
+  useSWRMutation(
+    "votes",
+    async (
+      _,
+      {
+        arg,
+      }: { arg: InsertData<"votes"> & { selected_games: SelectedGamesJson } }
+    ) => {
+      const { data } = await supabase
+        .from("votes")
         .insert(arg)
         .select()
         .single();

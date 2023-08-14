@@ -9,24 +9,6 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      guests: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
       nights: {
         Row: {
           bgg_account: string
@@ -60,32 +42,26 @@ export interface Database {
       votes: {
         Row: {
           created_at: string
-          game_ids: string[]
-          guest_id: string
           id: string
           night_id: string
+          selected_games: Json
+          voter_name: string
         }
         Insert: {
           created_at?: string
-          game_ids: string[]
-          guest_id: string
           id?: string
           night_id: string
+          selected_games: Json
+          voter_name: string
         }
         Update: {
           created_at?: string
-          game_ids?: string[]
-          guest_id?: string
           id?: string
           night_id?: string
+          selected_games?: Json
+          voter_name?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "votes_guest_id_fkey"
-            columns: ["guest_id"]
-            referencedRelation: "guests"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "votes_night_id_fkey"
             columns: ["night_id"]
