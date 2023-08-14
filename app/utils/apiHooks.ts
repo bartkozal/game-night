@@ -2,7 +2,7 @@ import { parseCollectionPayload } from "./bgg";
 import supabase from "./supabase";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { InsertData, SelectedGamesJson } from "@/types/database";
+import { InsertData } from "@/types/database";
 
 export const useFetchBggCollection = (username: string) =>
   useSWR(`bgg/collection/${username}`, async () => {
@@ -25,6 +25,23 @@ export const useFetchNight = (id: string) =>
     return data;
   });
 
+export const useFetchNightVotes = (id: string) =>
+  useSWR(`night-votes/${id}`, async () => {
+    const { data } = await supabase
+      .from("nights")
+      .select(
+        `
+        id, scheduled_at, voting_token, games_limit, votes (
+          selected_games, voter_name, id
+        )
+      `
+      )
+      .eq("id", id)
+      .single();
+
+    return data;
+  });
+
 export const useInsertNight = () =>
   useSWRMutation(
     "nights",
@@ -39,19 +56,7 @@ export const useInsertNight = () =>
   );
 
 export const useInsertVote = () =>
-  useSWRMutation(
-    "votes",
-    async (
-      _,
-      {
-        arg,
-      }: { arg: InsertData<"votes"> & { selected_games: SelectedGamesJson } }
-    ) => {
-      const { data } = await supabase
-        .from("votes")
-        .insert(arg)
-        .select()
-        .single();
-      return data;
-    }
-  );
+  useSWRMutation("votes", async (_, { arg }: { arg: InsertData<"votes"> }) => {
+    const { data } = await supabase.from("votes").insert(arg).select().single();
+    return data;
+  });

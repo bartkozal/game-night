@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, describe, it } from "vitest";
 import { parseCollectionPayload } from "../bgg";
 // @ts-expect-error
 import bggCollectionPayload from "./bgg-collection-payload.xml?raw";
@@ -17,14 +17,16 @@ index: 2
 </item>
 */
 
-test("bggResponseParser", () => {
-  const bggCollection = parseCollectionPayload(bggCollectionPayload);
+describe("parseCollectionPayload", () => {
+  it("should parse the BGG collection payload into json", () => {
+    const bggCollection = parseCollectionPayload(bggCollectionPayload);
 
-  expect(bggCollection.length).toEqual(207);
-  expect(bggCollection[2]).toEqual({
-    id: "4098",
-    name: "Age of Steam: Edycja Deluxe",
-    thumbnail:
-      "https://cf.geekdo-images.com/2Ropo10rrxU8JxRxv0Hs7g__thumb/img/E4zDMVUc6Uwe7heydFf79QnGGcg=/fit-in/200x150/filters:strip_icc()/pic7503495.png",
+    expect(bggCollection.length).toEqual(207);
+    expect(bggCollection[2]).toEqual({
+      id: "4098",
+      name: "Age of Steam: Edycja Deluxe",
+      thumbnail:
+        "https://cf.geekdo-images.com/2Ropo10rrxU8JxRxv0Hs7g__thumb/img/E4zDMVUc6Uwe7heydFf79QnGGcg=/fit-in/200x150/filters:strip_icc()/pic7503495.png",
+    });
   });
 });
