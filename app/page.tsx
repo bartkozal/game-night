@@ -5,18 +5,19 @@ import FormField from "./ui/FormField";
 import Form from "./ui/Form";
 import Button from "./ui/Button";
 import dayjs from "dayjs";
+import { FormEvent } from "react";
 
 export default function Home() {
   const router = useRouter();
 
+  const createNight = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/nights/1");
+  };
+
   return (
     <main>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push("/nights/1");
-        }}
-      >
+      <Form onSubmit={createNight}>
         <FormField
           htmlFor="accounts"
           label="BoardGameGeek account used to create the voting list:"

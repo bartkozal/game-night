@@ -15,16 +15,14 @@ import {
 } from "@heroicons/react/24/outline";
 import cx from "classnames";
 import { useDebounce } from "react-use";
-import parseBggCollectionPayload, {
-  BggCollectionEntry as Game,
-} from "@/app/utils/parseBggCollectionPayload";
+import { BggCollectionEntry as Game } from "@/app/utils/parseBggCollectionPayload";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import useSWR from "swr";
+import { useFetchBggCollection } from "@/app/utils/apiHooks";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
@@ -43,18 +41,9 @@ type Props = {
   };
 };
 
-const useGames = (username: string) =>
-  useSWR(`bgg/${username}`, () =>
-    fetch(
-      `https://boardgamegeek.com/xmlapi2/collection?username=${username}&own=1&excludesubtype=boardgameexpansion`
-    )
-      .then((res) => res.text())
-      .then((xml) => parseBggCollectionPayload(xml))
-  );
-
 export default function Page({ params }: Props) {
   const selectedGamesLimit = 5; // TODO backend
-  const { data: games = [], isLoading } = useGames("bartkozal");
+  const { data: games = [], isLoading } = useFetchBggCollection("bartkozal");
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
   const [viewType, setViewType] = useState<ViewType>(DEFAULT_VIEW_TYPE);
