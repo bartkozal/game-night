@@ -4,6 +4,12 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { InsertData } from "@/types/database";
 
+// <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+// <message>
+// 	Your request for this collection has been accepted and will be processed.  Please try again later for access.
+// </message>
+
+// empty response
 export const useFetchBggCollection = (username: string) =>
   useSWR(`bgg/collection/${username}`, async () => {
     const res = await fetch(

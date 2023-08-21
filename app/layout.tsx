@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,14 @@ export default function RootLayout({
         <h2 className="mb-4">{metadata.description}</h2>
 
         {children}
+
+        <div className="mt-4 text-sm text-gray-400 text-center">
+          Created and maintained by{" "}
+          <a className="underline" href="https://bartkozal.com" target="_blank">
+            Bartłomiej Kozal
+          </a>
+          . {dayjs().year()}.
+        </div>
       </body>
     </html>
   );

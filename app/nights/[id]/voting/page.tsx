@@ -55,7 +55,7 @@ type Props = {
 export default function Page({ params }: Props) {
   const { data: night, isLoading: isNightLoading } = useFetchNight(params.id);
   const { data: games = [], isLoading: isBggCollectionLoading } =
-    useFetchBggCollection("bartkozal");
+    useFetchBggCollection(night?.bgg_account ?? "");
   const { trigger } = useInsertVote();
 
   const [searchValue, setSearchValue] = useState("");
