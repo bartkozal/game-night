@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import dayjs from "dayjs";
+import Image from "next/image";
+import logoSrc from "./logo.png";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,23 +22,32 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cx("p-6", inter.className)}
-        suppressHydrationWarning={true}
+        className={cx("p-6 bg-gn-grey text-white", inter.className)}
+        suppressHydrationWarning
       >
-        <Link href="/">
-          <h1 className="text-2xl">{String(metadata.title)}</h1>
-        </Link>
-
-        <h2 className="mb-4">{metadata.description}</h2>
+        <div className="max-w-sm mx-auto flex justify-center">
+          <div className="w-1/2">
+            <Link href="/">
+              {/* <h1 className="text-2xl">{String(metadata.title)}</h1> */}
+              <Image src={logoSrc} alt={String(metadata.title)} />
+            </Link>
+          </div>
+        </div>
 
         {children}
 
-        <div className="mt-4 text-sm text-gray-400 text-center">
-          Created and maintained by{" "}
-          <a className="underline" href="https://bartkozal.com" target="_blank">
-            Bartłomiej Kozal
-          </a>
-          . {dayjs().year()}.
+        <div className="max-w-sm mx-auto flex justify-center">
+          <div className="mt-4 text-sm text-gray-400 text-center">
+            Created and maintained by{" "}
+            <a
+              className="underline"
+              href="https://bartkozal.com"
+              target="_blank"
+            >
+              Bartłomiej Kozal
+            </a>
+            . {dayjs().year()}.
+          </div>
         </div>
       </body>
     </html>

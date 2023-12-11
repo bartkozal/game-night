@@ -8,7 +8,7 @@ import {
   CheckIcon,
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
-import { useFetchNightVotes } from "@/app/utils/apiHooks";
+import { useFetchNightVotes } from "@/app/utils/api-hooks";
 import { humanizeDateTime } from "@/app/utils/datetime";
 import LoadingState from "@/app/ui/LoadingState";
 import { calculateRanking } from "@/app/utils/ranking";

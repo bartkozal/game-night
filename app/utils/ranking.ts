@@ -1,4 +1,4 @@
-import { useFetchNightVotes } from "./apiHooks";
+import { useFetchNightVotes } from "./api-hooks";
 
 type RankedGame = {
   id: string;

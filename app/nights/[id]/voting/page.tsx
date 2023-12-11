@@ -26,7 +26,7 @@ import {
   useFetchBggCollection,
   useFetchNight,
   useInsertVote,
-} from "@/app/utils/apiHooks";
+} from "@/app/utils/api-hooks";
 import { humanizeDateTime } from "@/app/utils/datetime";
 import LoadingState from "@/app/ui/LoadingState";
 import { SubmitHandler, useForm } from "react-hook-form";
