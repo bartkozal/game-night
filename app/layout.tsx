@@ -25,18 +25,17 @@ export default function RootLayout({
         className={cx("p-6 bg-gn-grey text-white", inter.className)}
         suppressHydrationWarning
       >
-        <div className="max-w-sm mx-auto flex justify-center">
+        <header className="max-w-sm mx-auto flex justify-center">
           <div className="w-1/2">
             <Link href="/">
-              {/* <h1 className="text-2xl">{String(metadata.title)}</h1> */}
               <Image src={logoSrc} alt={String(metadata.title)} />
             </Link>
           </div>
-        </div>
+        </header>
 
-        {children}
+        <main>{children}</main>
 
-        <div className="max-w-sm mx-auto flex justify-center">
+        <footer className="max-w-sm mx-auto flex justify-center">
           <div className="mt-4 text-sm text-gray-400 text-center">
             Created and maintained by{" "}
             <a
@@ -48,7 +47,7 @@ export default function RootLayout({
             </a>
             . {dayjs().year()}.
           </div>
-        </div>
+        </footer>
       </body>
     </html>
   );

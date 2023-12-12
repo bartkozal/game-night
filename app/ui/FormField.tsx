@@ -1,17 +1,35 @@
+import { RegisterOptions, useFormContext } from "react-hook-form";
+
 type Props = {
-  children: React.ReactNode;
+  type: "text";
+  id: string;
+  defaultValue?: string | number;
+  options: RegisterOptions;
   label: string;
-  htmlFor: string;
 };
 
-export default function FormField({ children, label, htmlFor }: Props) {
+export default function FormField({
+  type,
+  id,
+  defaultValue,
+  options,
+  label,
+}: Props) {
+  const { register } = useFormContext();
+
   return (
     <div>
-      <label htmlFor={htmlFor} className="flex mb-2">
+      <label htmlFor={id} className="flex mb-2">
         {label}
       </label>
 
-      {children}
+      <input
+        className="text-gn-grey"
+        type={type}
+        id={id}
+        defaultValue={defaultValue}
+        {...register(id, options)}
+      />
     </div>
   );
 }

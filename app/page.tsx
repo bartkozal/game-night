@@ -17,7 +17,7 @@ type FormData = {
 
 export default function Home() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<FormData>();
+  const methods = useForm<FormData>();
   const { trigger } = useInsertNight();
 
   const createNight: SubmitHandler<FormData> = async (formData) => {
@@ -29,20 +29,15 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <Form onSubmit={handleSubmit(createNight)}>
-        <FormField
-          htmlFor="bgg_account"
-          label="BoardGameGeek account used to create the voting list:"
-        >
-          <input
-            type="text"
-            id="bgg_account"
-            {...register("bgg_account", { required: true })}
-          />
-        </FormField>
+    <Form methods={methods} onSubmit={createNight}>
+      <FormField
+        id="bgg_account"
+        label="BoardGameGeek account used to create the voting list:"
+        type="text"
+        options={{ required: true }}
+      />
 
-        <FormField
+      {/* <FormField
           htmlFor="games_limit"
           label="How many games players can select?"
         >
@@ -72,12 +67,11 @@ export default function Home() {
             defaultValue={getDateTimeOneDayFromNow()}
             {...register("scheduled_at", { required: true })}
           />
-        </FormField>
+        </FormField> */}
 
-        <div>
-          <Button type="submit">Schedule game night</Button>
-        </div>
-      </Form>
-    </main>
+      <div>
+        <Button type="submit">Schedule game night</Button>
+      </div>
+    </Form>
   );
 }
