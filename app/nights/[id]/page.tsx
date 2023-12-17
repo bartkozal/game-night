@@ -42,7 +42,7 @@ export default function Page({ params }: Props) {
 
   return (
     <div>
-      <div className="my-8 bg-gray-100 p-8">
+      <div className="my-8 bg-gn-dark-grey rounded-xl p-8">
         <label htmlFor="url" className="block mb-4 text-center text-xl">
           Share this link with your friends:
         </label>
@@ -52,7 +52,7 @@ export default function Page({ params }: Props) {
             type="url"
             name="url"
             id="url"
-            className="w-full"
+            className="w-full bg-[#0B0B0B] border-[#3A3A3A] rounded"
             readOnly
             value={playersPageUrl}
             ref={shareUrlInput}
@@ -63,7 +63,7 @@ export default function Page({ params }: Props) {
               <CheckIcon className="w-6 h-6 text-green-600 ml-3" />
             ) : (
               <ClipboardDocumentListIcon
-                className="w-6 h-6 text-gray-600 ml-3"
+                className="w-6 h-6 text-gray-500 ml-3"
                 onClick={() => {
                   copyToClipboard(playersPageUrl);
                   setIsCopied(true);

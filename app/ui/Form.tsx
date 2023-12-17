@@ -5,13 +5,17 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 
-type Props = {
+type Props<FormData extends FieldValues> = {
   children: React.ReactNode;
-  methods: UseFormReturn;
-  onSubmit: SubmitHandler<FieldValues>;
+  methods: UseFormReturn<FormData>;
+  onSubmit: SubmitHandler<FormData>;
 };
 
-export default function Form({ children, methods, onSubmit }: Props) {
+export default function Form<FormData extends FieldValues>({
+  children,
+  methods,
+  onSubmit,
+}: Props<FormData>) {
   return (
     <FormProvider {...methods}>
       <form className="grid gap-4" onSubmit={methods.handleSubmit(onSubmit)}>

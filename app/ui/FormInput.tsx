@@ -1,18 +1,18 @@
 import { RegisterOptions, useFormContext } from "react-hook-form";
 
 type Props = {
-  type: "text";
+  type: "text" | "number" | "datetime-local";
   id: string;
-  defaultValue?: string | number;
-  options: RegisterOptions;
   label: string;
+  defaultValue?: string | number;
+  validation?: RegisterOptions;
 };
 
-export default function FormField({
+export default function FormInput({
   type,
   id,
   defaultValue,
-  options,
+  validation,
   label,
 }: Props) {
   const { register } = useFormContext();
@@ -24,11 +24,11 @@ export default function FormField({
       </label>
 
       <input
-        className="text-gn-grey"
+        className="bg-[#0B0B0B] border-[#3A3A3A] rounded"
         type={type}
         id={id}
         defaultValue={defaultValue}
-        {...register(id, options)}
+        {...register(id, validation)}
       />
     </div>
   );

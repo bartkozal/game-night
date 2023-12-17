@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import FormField from "./ui/FormField";
 import Form from "./ui/Form";
+import FormInput from "./ui/FormInput";
+import FormSelect from "./ui/FormSelect";
 import Button from "./ui/Button";
 import { useInsertNight } from "./utils/api-hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -29,45 +30,40 @@ export default function Home() {
   };
 
   return (
-    <Form methods={methods} onSubmit={createNight}>
-      <FormField
+    <Form<FormData> methods={methods} onSubmit={createNight}>
+      <FormInput
         id="bgg_account"
         label="BoardGameGeek account used to create the voting list:"
         type="text"
-        options={{ required: true }}
+        validation={{ required: true }}
       />
 
-      {/* <FormField
-          htmlFor="games_limit"
-          label="How many games players can select?"
-        >
-          <input
-            type="number"
-            defaultValue={5}
-            id="games_limit"
-            {...register("games_limit", { required: true, min: 1, max: 30 })}
-          />
-        </FormField>
+      <FormInput
+        id="games_limit"
+        label="How many games players can select?"
+        type="number"
+        defaultValue={5}
+        validation={{ required: true, min: 1, max: 30 }}
+      />
 
-        <FormField htmlFor="expansions" label="Include expansions?">
-          <select
-            id="expansions"
-            defaultValue="false"
-            {...register("expansions", { required: true })}
-          >
-            <option value="false">No</option>
-            <option value="true">Yes</option>
-          </select>
-        </FormField>
+      <FormSelect
+        id="expansions"
+        label="Include expansions?"
+        defaultValue="false"
+        validation={{ required: true }}
+        options={[
+          ["false", "No"],
+          ["true", "Yes"],
+        ]}
+      />
 
-        <FormField htmlFor="scheduled_at" label="When are you going to play?">
-          <input
-            type="datetime-local"
-            id="scheduled_at"
-            defaultValue={getDateTimeOneDayFromNow()}
-            {...register("scheduled_at", { required: true })}
-          />
-        </FormField> */}
+      <FormInput
+        id="scheduled_at"
+        label="When are you going to play?"
+        type="datetime-local"
+        defaultValue={getDateTimeOneDayFromNow()}
+        validation={{ required: true }}
+      />
 
       <div>
         <Button type="submit">Schedule game night</Button>
