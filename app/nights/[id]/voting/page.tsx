@@ -182,7 +182,7 @@ export default function Page({ params }: Props) {
                   "hover:bg-[#3A3A3A] cursor-pointer flex items-center",
                   viewType === "list" ? "p-1" : "p-2",
                   {
-                    "bg-[#3E873E]": isSelected(game),
+                    "bg-[#4A734A]": isSelected(game),
                   }
                 )}
                 onClick={() => {
