@@ -41,7 +41,7 @@ export default function Page({ params }: Props) {
   if (isLoading) return <LoadingState />;
 
   return (
-    <div>
+    <div className="md:w-[640px] md:mx-auto">
       <div className="my-8 bg-gn-dark-grey rounded-xl p-8">
         <label htmlFor="url" className="block mb-4 text-center text-xl">
           Share this link with your friends:

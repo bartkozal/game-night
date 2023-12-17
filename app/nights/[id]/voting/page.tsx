@@ -30,6 +30,7 @@ import {
 import { humanizeDateTime } from "@/app/utils/datetime";
 import LoadingState from "@/app/ui/LoadingState";
 import { SubmitHandler, useForm } from "react-hook-form";
+import FormInput from "@/app/ui/FormInput";
 
 const VIEW_TYPE_PAGE_SIZE = {
   grid: 24,
@@ -67,7 +68,7 @@ export default function Page({ params }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
   const router = useRouter();
-  const { register, handleSubmit } = useForm<FormData>();
+  const methods = useForm<FormData>();
 
   useDebounce(() => setDebouncedSearchValue(searchValue), 300, [searchValue]);
 
@@ -111,7 +112,7 @@ export default function Page({ params }: Props) {
   }
 
   return (
-    <div className="flex divide-x">
+    <div className="flex divide-x divide-[#3A3A3A]">
       <div className="w-3/4">
         <Heading>
           Select and order by preference {selectedGamesLimit} games you would
@@ -178,10 +179,10 @@ export default function Page({ params }: Props) {
               <div
                 key={game.id}
                 className={cx(
-                  "hover:bg-gray-100 cursor-pointer flex items-center",
+                  "hover:bg-[#3A3A3A] cursor-pointer flex items-center",
                   viewType === "list" ? "p-1" : "p-2",
                   {
-                    "bg-gray-300": isSelected(game),
+                    "bg-[#3E873E]": isSelected(game),
                   }
                 )}
                 onClick={() => {
@@ -239,7 +240,7 @@ export default function Page({ params }: Props) {
       </div>
 
       <div className="w-1/4 ml-6 pl-6">
-        <Form onSubmit={handleSubmit(createVote)}>
+        <Form<FormData> methods={methods} onSubmit={createVote}>
           <div>
             <Heading className="mb-0">Selected</Heading>
 
@@ -306,11 +307,12 @@ export default function Page({ params }: Props) {
           )}
 
           {!gamesAreNotSelected && (
-            <input
+            <FormInput
+              id="voter_name"
               type="text"
-              className="w-full text-sm"
-              placeholder="Provide your name..."
-              {...register("voter_name", { required: true })}
+              inputClassName="w-full text-sm"
+              placeholder="What's your name?"
+              validation={{ required: true }}
             />
           )}
 

@@ -30,44 +30,44 @@ export default function Home() {
   };
 
   return (
-    <Form<FormData> methods={methods} onSubmit={createNight}>
-      <FormInput
-        id="bgg_account"
-        label="BoardGameGeek account used to create the voting list:"
-        type="text"
-        validation={{ required: true }}
-      />
+    <div className="md:w-[480px] md:mx-auto">
+      <Form<FormData> methods={methods} onSubmit={createNight}>
+        <FormInput
+          id="bgg_account"
+          label="BoardGameGeek account used to create the voting list:"
+          type="text"
+          validation={{ required: true }}
+        />
 
-      <FormInput
-        id="games_limit"
-        label="How many games players can select?"
-        type="number"
-        defaultValue={5}
-        validation={{ required: true, min: 1, max: 30 }}
-      />
+        <FormInput
+          id="games_limit"
+          label="How many games players can select?"
+          type="number"
+          defaultValue={5}
+          validation={{ required: true, min: 1, max: 30 }}
+        />
 
-      <FormSelect
-        id="expansions"
-        label="Include expansions?"
-        defaultValue="false"
-        validation={{ required: true }}
-        options={[
-          ["false", "No"],
-          ["true", "Yes"],
-        ]}
-      />
+        <FormSelect
+          id="expansions"
+          label="Include expansions?"
+          defaultValue="false"
+          validation={{ required: true }}
+          options={[
+            ["false", "No"],
+            ["true", "Yes"],
+          ]}
+        />
 
-      <FormInput
-        id="scheduled_at"
-        label="When are you going to play?"
-        type="datetime-local"
-        defaultValue={getDateTimeOneDayFromNow()}
-        validation={{ required: true }}
-      />
+        <FormInput
+          id="scheduled_at"
+          label="When are you going to play?"
+          type="datetime-local"
+          defaultValue={getDateTimeOneDayFromNow()}
+          validation={{ required: true }}
+        />
 
-      <div>
         <Button type="submit">Schedule game night</Button>
-      </div>
-    </Form>
+      </Form>
+    </div>
   );
 }
