@@ -30,7 +30,7 @@ export default function Home() {
   };
 
   return (
-    <div className="md:w-[480px] md:mx-auto">
+    <div className="md:max-w-md md:mx-auto">
       <Form<FormData> methods={methods} onSubmit={createNight}>
         <FormInput
           id="bgg_account"

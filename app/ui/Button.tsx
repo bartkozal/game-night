@@ -18,7 +18,7 @@ export default function Button({
         "py-2",
         {
           " text-white rounded-xl px-4": styleType !== "inline",
-          "bg-[#4A734A] shadow-md": !disabled && styleType !== "inline",
+          "bg-ui-positive shadow-md": !disabled && styleType !== "inline",
           "bg-gray-300": disabled && styleType !== "inline",
           "px-2": styleType === "inline",
         },

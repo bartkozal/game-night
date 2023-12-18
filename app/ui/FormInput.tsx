@@ -31,10 +31,7 @@ export default function FormInput({
       )}
 
       <input
-        className={cx(
-          "bg-[#0B0B0B] border-[#3A3A3A] rounded w-full",
-          inputClassName
-        )}
+        className={cx("bg-ui-400 border-ui-100 rounded w-full", inputClassName)}
         type={type}
         id={id}
         defaultValue={defaultValue}

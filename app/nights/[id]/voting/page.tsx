@@ -42,11 +42,9 @@ const DEFAULT_VIEW_TYPE = "grid";
 
 type ViewType = keyof typeof VIEW_TYPE_PAGE_SIZE;
 type PageSize = (typeof VIEW_TYPE_PAGE_SIZE)[ViewType];
-
 type FormData = {
   voter_name: string;
 };
-
 type Props = {
   params: {
     id: string;
@@ -112,7 +110,7 @@ export default function Page({ params }: Props) {
   }
 
   return (
-    <div className="flex divide-x divide-[#3A3A3A]">
+    <div className="flex divide-x divide-ui-100">
       <div className="w-3/4">
         <Heading>
           Select and order by preference {selectedGamesLimit} games you would
@@ -121,7 +119,7 @@ export default function Page({ params }: Props) {
 
         <div className="flex items-center mb-4">
           <input
-            className="w-full rounded-xl"
+            className="w-full rounded-xl bg-ui-400 border-ui-100"
             type="search"
             name="search"
             id="search"
@@ -179,10 +177,10 @@ export default function Page({ params }: Props) {
               <div
                 key={game.id}
                 className={cx(
-                  "hover:bg-[#3A3A3A] cursor-pointer flex items-center",
+                  "hover:bg-ui-100 cursor-pointer flex items-center",
                   viewType === "list" ? "p-1" : "p-2",
                   {
-                    "bg-[#4A734A]": isSelected(game),
+                    "bg-ui-400": isSelected(game),
                   }
                 )}
                 onClick={() => {

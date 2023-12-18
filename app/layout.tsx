@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cx("p-6 bg-[#1E1E1E] text-gray-200", inter.className)}
+        className={cx("p-6 bg-ui-200 text-gray-200", inter.className)}
         suppressHydrationWarning
       >
         <header className="max-w-sm mx-auto flex justify-center">

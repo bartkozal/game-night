@@ -24,7 +24,7 @@ export default function FormSelect({
       </label>
 
       <select
-        className="bg-[#0B0B0B] border-[#3A3A3A] rounded w-full"
+        className="bg-ui-400 border-ui-100 rounded w-full"
         defaultValue={defaultValue}
         {...register(id, validation)}
       >

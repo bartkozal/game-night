@@ -8,13 +8,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "gn-grey": "#1E1E1E",
-        "gn-dark-grey": "#141414",
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "ui-100": "#3A3A3A",
+        "ui-200": "#1E1E1E",
+        "ui-300": "#141414",
+        "ui-400": "#0B0B0B",
+        "ui-positive": "#4A734A",
       },
     },
   },
