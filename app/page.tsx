@@ -8,6 +8,7 @@ import Button from "./ui/Button";
 import { useInsertNight } from "./utils/api-hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { getDateTimeOneDayFromNow } from "./utils/datetime";
+import Heading from "./ui/Heading";
 
 type FormData = {
   bgg_account: string;
@@ -34,7 +35,7 @@ export default function Home() {
       <Form<FormData> methods={methods} onSubmit={createNight}>
         <FormInput
           id="bgg_account"
-          label="BoardGameGeek account used to create the voting list:"
+          label="What is your BGG username?"
           type="text"
           validation={{ required: true }}
         />

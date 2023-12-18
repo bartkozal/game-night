@@ -46,7 +46,6 @@ export default function Page({ params }: Props) {
         <div className="flex divide-x divide-ui-100">
           <div className="w-2/3">
             <Heading className="mb-0">
-              Games selected for the game night on{" "}
               {humanizeDateTime(night?.scheduled_at)}
             </Heading>
 
@@ -72,7 +71,6 @@ export default function Page({ params }: Props) {
           </div>
 
           <div className="w-1/3 ml-6 pl-6">
-            <Heading>Voting</Heading>
             <div className="grid gap-4">
               {night?.votes.map((vote) => (
                 <div key={vote.id}>
@@ -106,7 +104,7 @@ export default function Page({ params }: Props) {
 
       <div className="my-8 bg-ui-300 rounded-xl p-8">
         <label htmlFor="url" className="block mb-4 text-center text-xl">
-          Share this link with your friends:
+          Voting link to share with your friends:
         </label>
 
         <div className="flex items-center">
