@@ -37,7 +37,7 @@ export default function RootLayout({
 
         <footer className="max-w-sm mx-auto flex justify-center">
           <div className="mt-4 text-sm text-gray-500 text-center">
-            Created and maintained by{" "}
+            Created by{" "}
             <a
               className="underline"
               href="https://bartkozal.com"
