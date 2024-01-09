@@ -19,7 +19,7 @@ export default function Button({
         {
           " text-white rounded-xl px-4": styleType !== "inline",
           "bg-ui-positive shadow-md": !disabled && styleType !== "inline",
-          "bg-gray-300": disabled && styleType !== "inline",
+          "bg-ui-100": disabled && styleType !== "inline",
           "px-2": styleType === "inline",
         },
         className

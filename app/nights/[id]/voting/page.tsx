@@ -206,10 +206,8 @@ export default function Page({ params }: Props) {
           <div className="flex items-center justify-center mt-8">
             <button
               className={cx(
-                "w-7 h-7 flex items-center justify-center mx-1",
-                currentPage === 1
-                  ? "text-gray-400"
-                  : "text-gray-700 hover:bg-gray-100"
+                "w-7 h-7 flex items-center justify-center mx-1 rounded",
+                currentPage === 1 ? "text-ui-100" : "text-white hover:bg-ui-400"
               )}
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
@@ -223,10 +221,10 @@ export default function Page({ params }: Props) {
 
             <button
               className={cx(
-                "w-7 h-7 flex items-center justify-center mx-1",
+                "w-7 h-7 flex items-center justify-center mx-1 rounded",
                 currentPage === lastPage
-                  ? "text-gray-400"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "text-ui-100"
+                  : "text-white hover:bg-ui-400"
               )}
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === lastPage}
