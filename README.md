@@ -1,5 +1,7 @@
 # Game Night
 
+https://github.com/bartkozal/game-night/assets/127219/b3408ada-40b4-49f4-95e8-6a83b18b9b1d
+
 ## Getting Started
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and supported by API built in [Supabase](https://supabase.com/).
